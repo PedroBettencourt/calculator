@@ -14,31 +14,44 @@ function multiply(a, b) {
     return a / b;
 }
 
-let numA;
-let numB;
 
 function operate(a, b, operator) {
+    a = parseFloat(a);
+    b = parseFloat(b);
+    let result;
+
     switch (operator) {
         case "+":
-            add(a, b);
+            result = add(a, b);
             break;
         case "-":
-            subtract(a, b);
+            result = subtract(a, b);
             break;
         case "*":
-            multiply(a, b);
+            result = multiply(a, b);
             break;
         case "/":
-            divide(a, b);
+            result = divide(a, b);
             break;
     }
+    return result;
 }
+
+let valueDisplay = "";
+let valueLast = "";
+let valueNow = "";
 
 const display = document.querySelector(".display");
 const digit = document.querySelector(".digits");
 digit.addEventListener("click", (e) => {
     const element = e.target
     if (element.classList[0] === "digit") {
+        if(valueDisplay !== "") {
+            display.textContent = "";
+            valueLast = valueDisplay;
+            valueDisplay = "";
+        }
+
         if(element.textContent === "." && display.textContent.includes(".")) { return }
         display.textContent += element.textContent;
     }
@@ -46,8 +59,16 @@ digit.addEventListener("click", (e) => {
 
 const plus = document.querySelector("#plus");
 plus.addEventListener("click", () => {
-    const valueFirst = display.textContent;
-    display.textContent = "";
-    console.log(valueFirst);
-    //add()
+    if (valueLast === "") {
+        valueLast = display.textContent;
+        display.textContent = "";
+        return
+    }
+    valueNow = display.textContent;
+
+    valueDisplay = operate(valueLast, valueNow, "+");
+    display.textContent = valueDisplay;
+    valueLast = "";
+    valueNow = "";
+    
 });
