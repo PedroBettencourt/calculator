@@ -16,9 +16,8 @@ function multiply(a, b) {
 
 let numA;
 let numB;
-let operator;
 
-function operator(a, b, operator) {
+function operate(a, b, operator) {
     switch (operator) {
         case "+":
             add(a, b);
@@ -35,3 +34,20 @@ function operator(a, b, operator) {
     }
 }
 
+const display = document.querySelector(".display");
+const digit = document.querySelector(".digits");
+digit.addEventListener("click", (e) => {
+    const element = e.target
+    if (element.classList[0] === "digit") {
+        if(element.textContent === "." && display.textContent.includes(".")) { return }
+        display.textContent += element.textContent;
+    }
+})
+
+const plus = document.querySelector("#plus");
+plus.addEventListener("click", () => {
+    const valueFirst = display.textContent;
+    display.textContent = "";
+    console.log(valueFirst);
+    //add()
+});
