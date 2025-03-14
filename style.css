@@ -39,7 +39,7 @@ button.digit {
     background-color: salmon;
 }
 
-button.operator {
+button.operator, .result, .clear {
     background-color: coral;
 }
 
@@ -76,6 +76,6 @@ button.operator {
     gap: 10px;
 }
 
-#plus, #equals {
+#plus, .result {
     height: 210px;
 }
