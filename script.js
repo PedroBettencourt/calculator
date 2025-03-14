@@ -1,49 +1,39 @@
-function add(a, b) {
-    return a + b;
-}
-function subtract(a, b) {
-    return a - b;
-}
-function multiply(a, b) {
-    return a * b;
-}
-function divide(a, b) {
-    return a / b;
-}
-
-function operate(a, b, operator) {
-    a = parseFloat(a);
-    b = parseFloat(b);
+function operate() {
+    a = parseFloat(lastValue);
+    b = parseFloat(currValue);
     let result;
 
-    switch (operator) {
+    switch (currOperation) {
         case "+":
-            result = add(a, b);
+            result = a + b;
             break;
         case "-":
-            result = subtract(a, b);
+            result = a - b;
             break;
         case "x":
-            result = multiply(a, b);
+            result = a * b;
             break;
         case "/":
-            result = divide(a, b);
+            if(b == 0) {
+                alert("Cannot divide by zero!"); 
+                return;
+            }
+            result = a / b;
             break;
     }
-    valueDisplay = +result.toFixed(8);;
+    currValue = +result.toFixed(8);
+    valueDisplay = currValue;
     display.textContent = valueDisplay;
     valueLast = "";
     valueNow = "";
-    operationLast = operationNext;
-    operationNext = "";
-
+    currOperation = "";
 }
 
-let valueDisplay = "";
-let valueLast = "";
-let valueNow = "";
-let operationLast = "";
-let operationNext = "";
+let currValue = "";
+let lastValue = "";
+let currOperation = "";
+let tempOperation = "";
+let displayValue = "";
 
 // Get digits from buttons
 const display = document.querySelector(".display");
@@ -51,19 +41,24 @@ const digit = document.querySelector(".digits");
 digit.addEventListener("click", (e) => {
     const element = e.target
     if (element.classList[0] === "digit") {
-        // Clear display and keep last value if the last operation wasn't result
-        if(valueDisplay !== "") {
-            display.textContent = "";
-            if(operationLast !== "=") valueLast = valueDisplay;
-            valueDisplay = "";
+        if(displayValue) {
+            display.textContent = 0;
+            displayValue = "";
         }
 
         // Prohibit more than 1 dot
-        if(element.textContent === "." && display.textContent.includes(".")) { return }
+        if (element.textContent === "." && display.textContent.includes(".")) { return }
         
         // Replace 0 so when typing a number 0 doesn't stay as the 1st digit
-        if (display.textContent === "0") display.textContent = "";
+        if (display.textContent.at(0) === "0") display.textContent = display.textContent.slice(1);
+        
+        // Store curr operation if operation has been chosen
+        if (tempOperation !== "") {
+            currOperation = tempOperation;
+            tempOperation = "";
+        }
 
+        currValue += element.textContent;
         display.textContent += element.textContent;
     }
 })
@@ -72,44 +67,42 @@ digit.addEventListener("click", (e) => {
 const operationButtons = document.querySelectorAll(".operator");
 operationButtons.forEach((btn) => {
     btn.addEventListener("click", (e) => {
-        let operation = e.target.textContent;
-        if (operationLast === "" || operationLast === "=") {
-            operationLast = operation;
-        } else {
-            operationNext = operation;
-        }
+        const operation = e.target.textContent;
+        tempOperation = operation;
 
-        valueDisplay = display.textContent;
-
-        if (valueLast === "") {
-            valueLast = valueDisplay;
-            return
+        if (currValue === "") return
+        if (lastValue !== "" && currOperation !== "") {
+            operate()
         }
-        valueNow = valueDisplay;
-        if (valueLast === valueNow && typeof valueNow == "string") return;
-        operate(valueLast, valueNow, operationLast);
+        displayValue = currValue;
+        lastValue = currValue;
+        currValue = "";
     })
 });
-
 
 // Get the result with equal button
 const resultButton = document.querySelector(".result");
 resultButton.addEventListener("click", (e) => {
-    if (valueLast === "") return;
-    valueNow = display.textContent;
-    operate(valueLast, valueNow, operationLast);
+    if (lastValue === "") return;
 
-    // Keeps track if the input was the equal sign
-    operationLast = "=";
+    operate();
+    lastValue = currValue;
+    displayValue = currValue;
+    currValue = "";
 });
-
 
 // Clear with the C button
 const clearButton = document.querySelector(".clear");
 clearButton.addEventListener("click", (e) => {
-    valueLast = "";
-    valueNow = "";
-    valueDisplay = "";
-    operationLast = "";
+    currValue = "";
+    lastValue = "";
+    currOperation = "";
     display.textContent = 0;
-})
+});
+
+// Delete with DEL button
+const deleteButton = document.querySelector(".delete");
+deleteButton.addEventListener("click", () => {
+    currValue = currValue.slice(0, -1);
+    display.textContent = currValue;
+});

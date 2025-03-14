@@ -39,7 +39,7 @@ button.digit {
     background-color: salmon;
 }
 
-button.operator, .result, .clear {
+button.operator, .result, .clear, .delete{
     background-color: coral;
 }
 
@@ -76,6 +76,6 @@ button.operator, .result, .clear {
     gap: 10px;
 }
 
-#plus, .result {
+.result {
     height: 210px;
 }
