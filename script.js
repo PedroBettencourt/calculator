@@ -87,8 +87,7 @@ operationButtons.forEach((btn) => {
             return
         }
         valueNow = valueDisplay;
-        console.log(operationLast, operationNext)
-
+        if (valueLast === valueNow && typeof valueNow == "string") return;
         operate(valueLast, valueNow, operationLast);
     })
 });
@@ -113,6 +112,5 @@ clearButton.addEventListener("click", (e) => {
     valueNow = "";
     valueDisplay = "";
     operationLast = "";
-    operationNext = "";
     display.textContent = 0;
 })
