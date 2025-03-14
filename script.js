@@ -30,8 +30,7 @@ function operate(a, b, operator) {
             result = divide(a, b);
             break;
     }
-
-    valueDisplay = result;
+    valueDisplay = +result.toFixed(8);;
     display.textContent = valueDisplay;
     valueLast = "";
     valueNow = "";
